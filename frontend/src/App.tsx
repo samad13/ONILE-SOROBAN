@@ -80,7 +80,7 @@ export default function App() {
   return (
     <div className="page">
       <header className="topbar">
-        <h1>Prediction Market</h1>
+        <h1>ONILE-SOROBAN Prediction Market</h1>
         {publicKey ? (
           <span className="pill">
             {publicKey.slice(0, 4)}…{publicKey.slice(-4)}
