@@ -1,0 +1,11 @@
+[workspace]
+resolver = "2"
+members = ["prediction-market"]
+
+[profile.release]
+opt-level = "z"
+overflow-checks = true
+debug = 0
+panic = "abort"
+codegen-units = 1
+lto = true
