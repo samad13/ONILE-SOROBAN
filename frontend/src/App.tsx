@@ -82,7 +82,9 @@ export default function App() {
       <header className="topbar">
         <h1>Prediction Market</h1>
         {publicKey ? (
-          <span className="pill">{publicKey.slice(0, 4)}…{publicKey.slice(-4)}</span>
+          <span className="pill">
+            {publicKey.slice(0, 4)}…{publicKey.slice(-4)}
+          </span>
         ) : (
           <button onClick={handleConnect}>Connect Wallet</button>
         )}
@@ -90,15 +92,23 @@ export default function App() {
 
       {message && <div className="banner error">{message}</div>}
 
-      {!market && <p className="muted">Connect your wallet to load the market.</p>}
+      {!market && (
+        <p className="muted">Connect your wallet to load the market.</p>
+      )}
 
       {market && (
         <main className="grid">
           <section className="card">
             <h2>{market.question}</h2>
             <div className="status-row">
-              <span className={`badge badge-${market.status.toLowerCase()}`}>{market.status}</span>
-              {market.winner && <span className="badge badge-winner">Winner: {market.winner}</span>}
+              <span className={`badge badge-${market.status.toLowerCase()}`}>
+                {market.status}
+              </span>
+              {market.winner && (
+                <span className="badge badge-winner">
+                  Winner: {market.winner}
+                </span>
+              )}
             </div>
 
             <div className="pools">
@@ -114,8 +124,13 @@ export default function App() {
 
             {impliedYesBps !== null && (
               <div className="prob-bar">
-                <div className="prob-fill" style={{ width: `${impliedYesBps / 100}%` }} />
-                <span className="prob-label">{(impliedYesBps / 100).toFixed(1)}% YES</span>
+                <div
+                  className="prob-fill"
+                  style={{ width: `${impliedYesBps / 100}%` }}
+                />
+                <span className="prob-label">
+                  {(impliedYesBps / 100).toFixed(1)}% YES
+                </span>
               </div>
             )}
 
@@ -181,7 +196,8 @@ export default function App() {
               </div>
             )}
 
-            {(market.status === "Resolved" || market.status === "Cancelled") && (
+            {(market.status === "Resolved" ||
+              market.status === "Cancelled") && (
               <button
                 disabled={busy || !publicKey}
                 onClick={() =>
@@ -203,27 +219,44 @@ export default function App() {
                 <div className="admin-row">
                   <button
                     disabled={busy}
-                    onClick={() => withBusy(async () => publicKey && resolveMarket(publicKey, "Yes"))}
+                    onClick={() =>
+                      withBusy(async () => {
+                        if (!publicKey) return;
+                        await resolveMarket(publicKey, "Yes");
+                      })
+                    }
                   >
                     Resolve: YES
                   </button>
                   <button
                     disabled={busy}
-                    onClick={() => withBusy(async () => publicKey && resolveMarket(publicKey, "No"))}
+                    onClick={() =>
+                      withBusy(async () => {
+                        if (!publicKey) return;
+                        await resolveMarket(publicKey, "No");
+                      })
+                    }
                   >
                     Resolve: NO
                   </button>
                 </div>
               )}
-              {isAdmin && market.status !== "Resolved" && market.status !== "Cancelled" && (
-                <button
-                  className="danger"
-                  disabled={busy}
-                  onClick={() => withBusy(async () => publicKey && cancelMarket(publicKey))}
-                >
-                  Cancel market
-                </button>
-              )}
+              {isAdmin &&
+                market.status !== "Resolved" &&
+                market.status !== "Cancelled" && (
+                  <button
+                    className="danger"
+                    disabled={busy}
+                    onClick={() =>
+                      withBusy(async () => {
+                        if (!publicKey) return;
+                        await cancelMarket(publicKey);
+                      })
+                    }
+                  >
+                    Cancel market
+                  </button>
+                )}
             </section>
           )}
         </main>
